@@ -1,22 +1,26 @@
-
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import {useState} from "react";
 
 function ShelfPage() {
   const dispatch = useDispatch();
 
-  const items = useSelector((store) => store.genres);
+  // const items = useSelector((store) => store.shelf.newItem);
+  const [item, setItem] = useState({
+    description: "",
+    image_url: ""
+  })
 
-  const addItem = () => {
-    dispatch({
-      type: "POST_ITEM",
-      payload: items,
-    });
-  };
+  // const addItem = () => {
+  //   dispatch({
+  //     type: "ADD_ITEM",
+  //     payload: item,
+  //   });
+  // };
 
   const onSave = () => {
     dispatch({
-      type: "ADD_ITEM",
+      type: "POST_ITEM",
       payload: item,
     });
   };
@@ -33,15 +37,15 @@ function ShelfPage() {
       <div>
         <input
           placeholder="Item"
-          value={items.description}
-          onChange={(event) => addItem({...items, description: event.target.value})}
+          value={item.description}
+          onChange={(event) => setItem({...item, description: event.target.value})}
         />
       </div>
       <div>
         <input
           placeholder="Poster URL"
-          value={items.image_url}
-          onChange={(event) => addItem({...items, image_url: event.target.value })}
+          value={item.image_url}
+          onChange={(event) => setItem({...item, image_url: event.target.value })}
         />
       </div>
     </div>
