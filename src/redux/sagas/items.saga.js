@@ -3,7 +3,7 @@ import axios from "axios";
 
 function* itemSaga() {
   yield takeEvery("GET_ITEMS", fetchAllItems);
-  yield takeEvery("ADD_ITEM", addItem);
+  yield takeEvery("POST_ITEM", addItem);
   yield takeEvery("DELETE_ITEM", deleteItem);
 }
 
@@ -18,14 +18,14 @@ function* fetchAllItems() {
 }
 
 function* addItem(action) {
-  yield axios.post("api/item", action.payload);
+  yield axios.post("api/shelf", action.payload);
   yield put({ type: "GET_ITEMS" });
 }
 //need to solve how to do delete
 
 function* deleteItem(action) {
   try {
-    yield axios.delete(`/item/${action.payload}`);
+    yield axios.delete(`/shelf/${action.payload}`);
     yield put({ type: "GET_ITEMS" });
   } catch {
     console.log("Error deleting item");
