@@ -1,21 +1,35 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './components/App/App.js';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-// Provider allows us to use redux within our react app
-import { Provider } from 'react-redux';
-import logger from 'redux-logger';
-// Import saga middleware
-import createSagaMiddleware from 'redux-saga';
-import { takeEvery, put } from 'redux-saga/effects';
-import axios from 'axios';
+import { takeEvery, put } from "redux-saga/effects";
+import axios from "axios";
 
-function* itemSaga(){
-    yield takeEvery('GET_ITEMS', fetchAllItems);
-    
+function* itemSaga() {
+  yield takeEvery("GET_ITEMS", fetchAllItems);
+  yield takeEvery("ADD_ITEM", addItem);
+  yield takeEvery("DELETE_ITEM", deleteItem);
 }
 
-function* fetchAllItems(action) {
-    const items = yield axios.get('/api/shelf')
+function* fetchAllItems() {
+  try {
+    const items = yield axios.get("/api/shelf");
+    console.log("get all items:", items.data);
+    yield put({ type: "SET_ITEMS", payload: items.data });
+  } catch {
+    console.log("get all items error");
+  }
 }
+
+function* addItem(action) {
+  yield axios.post("api/item", action.payload);
+  yield put({ type: "GET_ITEMS" });
+}
+//need to solve how to do delete
+
+function* deleteItem(action) {
+  try {
+    yield axios.delete(`/item/${action.payload}`);
+    yield put({ type: "GET_ITEMS" });
+  } catch {
+    console.log("Error deleting item");
+  }
+}
+
+export default itemSaga;
