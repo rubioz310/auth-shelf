@@ -3,7 +3,7 @@ import axios from "axios";
 
 function* itemSaga() {
   yield takeEvery("GET_ITEMS", fetchAllItems);
-  yield takeEvery("ADD_ITEM", addItem);
+  yield takeEvery("POST_ITEM", addItem);
   yield takeEvery("DELETE_ITEM", deleteItem);
 }
 
