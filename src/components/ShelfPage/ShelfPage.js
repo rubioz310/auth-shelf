@@ -1,29 +1,42 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {useState} from "react";
+import { useEffect } from "react";
+import './ShelfPage.css'
 
 function ShelfPage() {
   const dispatch = useDispatch();
 
-  // const items = useSelector((store) => store.shelf.newItem);
+  //Get all items from database when loading page
+  useEffect(() => {
+    dispatch({
+      type: 'GET_ITEMS'
+    });
+  }, []);
+
+  const allItems = useSelector((store) => store.shelf.items);
   const [item, setItem] = useState({
     description: "",
     image_url: ""
   })
-
-  // const addItem = () => {
-  //   dispatch({
-  //     type: "ADD_ITEM",
-  //     payload: item,
-  //   });
-  // };
 
   const onSave = () => {
     dispatch({
       type: "POST_ITEM",
       payload: item,
     });
+    setItem({
+      description: "",
+      image_url: ""
+    })
   };
+
+  const handleDelete = (id) => {
+    dispatch({
+      type: "DELETE_ITEM",
+      payload: id
+    })
+  }
 
   return (
     <div>
@@ -47,6 +60,16 @@ function ShelfPage() {
           value={item.image_url}
           onChange={(event) => setItem({...item, image_url: event.target.value })}
         />
+      </div>
+      <div>
+        <ul>
+          {allItems.map(stuff =>  (
+          <li key={stuff.id}>
+            {stuff.description}
+            <img className="shelfImg" src={stuff.image_url} />
+            <button type="button" onClick={() => handleDelete(stuff.id)}>Delete</button>
+          </li>))}
+        </ul>
       </div>
     </div>
   );

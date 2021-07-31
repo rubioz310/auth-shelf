@@ -25,7 +25,7 @@ function* addItem(action) {
 
 function* deleteItem(action) {
   try {
-    yield axios.delete(`/shelf/${action.payload}`);
+    yield axios.delete(`/api/shelf/${action.payload}`);
     yield put({ type: "GET_ITEMS" });
   } catch {
     console.log("Error deleting item");
